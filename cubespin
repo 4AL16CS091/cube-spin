@@ -1,0 +1,71 @@
+#include <gl/glut.h>
+float v[8][3]={{-1,1,1},{1,-1,1},{1,1,1},{-1,1,1},{-1,-1,-1},{1,-1,-1},{1,1,-1},{-1,1,-1}};
+float c1[8][3]={{0,1,1},{0,0,1},{1,0,1},{1,1,1},{0,1,0},{0,0,0},{1,0,0},{1,1,0}};
+float angle[] = {0,0,0};
+void init()
+{
+     glClearColor(1,1,1,1);
+	glOrtho(-2,2,-2,2,-2,2);
+	glEnable(GL_DEPTH_TEST);
+}
+void square(int a,int b,int c,int d)
+{
+	glBegin(GL_QUADS);
+	glColor3fv(c1[a]);
+	glVertex3fv(v[a]);
+	glColor3fv(c1[b]);
+	glVertex3fv(v[b]);
+	glColor3fv(c1[c]);
+	glVertex3fv(v[c]);
+	glColor3fv(c1[d]);
+	glVertex3fv(v[d]);
+	glEnd();
+}
+
+void cube(float *v0,float *v1,float *v2,float *v3,float *v4,float *v5,float *v6,float *v7)
+{
+	square(0,1,2,3);
+	square(1,2,6,5);
+	square(3,2,6,7);
+	square(3,4,7,3);
+	square(0,4,5,1);
+	square(4,5,6,7);
+}
+
+void display()
+{
+	glMatrixMode(GL_MODELVIEW);
+
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	cube(v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7]);
+	glFlush();
+}
+void rotate()
+{
+	glRotatef(60,0,0,1);
+	display();
+}
+void MyMouse(int state,int button,int x,int y)
+{
+	if(state == GLUT_DOWN && button == GLUT_LEFT_BUTTON)
+	{
+		glRotatef(90,0,1,0);
+		display();
+	}
+	
+
+}
+
+
+void main()
+{
+	glutInitDisplayMode(GLUT_SINGLE|GLUT_DEPTH);
+	glutInitWindowSize(600,600);
+	glutInitWindowPosition(50,50);
+	glutCreateWindow("COLOR CUBE");
+	init();
+	glutDisplayFunc(display);
+	glutIdleFunc(rotate);
+	glutMouseFunc(MyMouse);
+	glutMainLoop();
+}
